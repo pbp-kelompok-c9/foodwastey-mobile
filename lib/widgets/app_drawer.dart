@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodwastey_mobile/modules/food_waste_reporting/screens/report_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../core/theme.dart';
@@ -59,6 +60,11 @@ class AppDrawer extends StatelessWidget {
           ),
 
           // ---- Modul lain (Event, Reporting, Management, Discovery) tambahkan di sini.
+          ListTile(
+            leading: const Icon(Icons.report),
+            title: const Text('Laporan'),
+            onTap: () => _push(context, const ReportScreen()),
+          ),
 
           const Divider(),
           // ---- Modul User & Authentication
@@ -80,6 +86,7 @@ class AppDrawer extends StatelessWidget {
               onTap: () => _push(context, const RegisterScreen()),
             ),
           ],
+        
         ],
       ),
     );
