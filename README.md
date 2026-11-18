@@ -14,7 +14,18 @@ Alur aplikasi: peserta mengirim laporan → admin menerima atau menolak laporan 
 
 ## ⚙️ Panduan Instalasi (Menjalankan Local)
 
-Panduan instalasi menyusul.
+Prasyarat: Flutter 3.50 atau lebih baru (Dart ^3.13.7).
+
+```bash
+flutter pub get
+
+# Memakai situs web di PWS (default)
+flutter run
+
+# Memakai server Django lokal (jalankan `python manage.py runserver` di repo web)
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000          # emulator Android
+flutter run -d chrome --dart-define=API_BASE_URL=http://127.0.0.1:8000  # Flutter Web
+```
 
 ## 👥 Anggota kelompok
 
@@ -60,7 +71,38 @@ Pembeda yang diusulkan adalah alur **peserta melapor → EO memoderasi → EO me
 
 ## 🌐 Alur Integrasi Data
 
-Alur integrasi menyusul.
+Data aplikasi tetap tersimpan di situs web Django [FoodWastey](https://github.com/pbp-kelompok-c9/foodwaste) yang di-deploy di PWS. Aplikasi mobile tidak menyimpan data statis; semua data diambil dan dikirim lewat web service Django REST Framework (DRF).
+
+1. **Endpoint DRF di proyek Django.** Setiap modul menambahkan serializer dan view DRF di app Django-nya, lalu didaftarkan di bawah prefix `/api/`. Serializer memakai ulang validasi form yang sama dengan situs web sehingga aturan data di web dan mobile selalu sama.
+2. **Login dan token.** Aplikasi mengirim `POST /api/auth/login/`. Django memeriksa username dan password, lalu mengembalikan token DRF (`rest_framework.authtoken`) beserta data akun dan perannya. Token disimpan di perangkat (`shared_preferences`) sehingga pengguna tetap login saat aplikasi dibuka ulang (dipulihkan lewat `GET /api/auth/me/`).
+3. **Request terautentikasi.** `ApiClient` (`lib/core/api_client.dart`) otomatis menambahkan header `Authorization: Token <token>` ke setiap request. Di Django, `TokenAuthentication` mengenali pengguna sehingga `request.user` dan permission (EO, Admin) sama seperti di situs web.
+4. **Pengolahan JSON.** Respons JSON di-decode, lalu diubah menjadi model Dart (mis. `Account.fromJson`) dan ditampilkan dengan widget. Error validasi DRF (`{"field": ["pesan"]}`) ditampilkan di bawah input yang bersangkutan.
+5. **Sinkron dengan web.** Karena web dan mobile memakai database yang sama, data yang diubah di aplikasi langsung terlihat di situs web, dan sebaliknya.
+
+Untuk modul lain, gunakan klien yang sama: `context.read<AuthService>().api.get('/api/...')`.
+
+### Daftar endpoint
+
+**User & Authentication** (`authentication/api_views.py`)
+
+| Method | Endpoint | Akses | Fungsi |
+| --- | --- | --- | --- |
+| POST | `/api/auth/register/` | Publik | Registrasi akun (`username`, `email`, `password1`, `password2`) |
+| POST | `/api/auth/login/` | Publik | Login, mengembalikan `token` dan `user` (termasuk peran `is_eo`, `is_admin`) |
+| POST | `/api/auth/logout/` | Login | Logout dan mencabut token |
+| GET | `/api/auth/me/` | Login | Akun sendiri (memulihkan sesi saat aplikasi dibuka) |
+
+<!-- Modul lain: tambahkan tabel endpoint masing-masing di bawah ini. -->
+
+### Branch
+
+Setiap modul dikerjakan di branch `feature/<modul>` lalu digabung ke `main`, mengikuti repositori web.
+
+| Modul | Branch |
+| --- | --- |
+| User & Authentication | `feature/authentication` |
+| Food Waste Reporting | `feature/food-waste-reporting` |
+
 ## 🎨 Desain Figma
 
 [Desain FoodWastey di Figma](https://www.figma.com/design/wSGPDUl78i7Bzpfz7zeWil/Untitled?node-id=0-1&t=KkgO6a6FgNbzobOW-1)

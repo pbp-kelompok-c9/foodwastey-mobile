@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Diperlukan agar APK release bisa memanggil web service Django. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="foodwastey_mobile"
+        android:label="FoodWastey"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
