@@ -6,6 +6,7 @@ import '../core/theme.dart';
 import '../modules/auth/screens/login_screen.dart';
 import '../modules/auth/screens/register_screen.dart';
 import '../modules/auth/services/auth_service.dart';
+import '../modules/discovery_dashboard/screens/discovery_dashboard_screen.dart';
 
 /// Navigasi utama aplikasi. Setiap modul menambahkan ListTile ke bagiannya.
 class AppDrawer extends StatelessWidget {
@@ -64,6 +65,15 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.report),
             title: const Text('Laporan'),
             onTap: () => _push(context, const ReportScreen()),
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.dashboard_outlined),
+            title: const Text('Discovery & Dashboard'),
+            onTap: () => _push(
+              context,
+              const DiscoveryDashboardScreen(),
+            ),
           ),
 
           const Divider(),
