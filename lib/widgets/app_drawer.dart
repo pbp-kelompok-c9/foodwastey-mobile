@@ -1,3 +1,4 @@
+import '../modules/event_management/screens/event_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,7 +63,12 @@ class AppDrawer extends StatelessWidget {
           ),
 
           // ---- Modul lain (Event, Reporting, Management, Discovery) tambahkan di sini.
-          ListTile(
+                    ListTile(
+            leading: const Icon(Icons.event_outlined),
+            title: const Text('Event Management'),
+            onTap: () => _push(context, const EventManagementScreen()),
+          ),
+ListTile(
             leading: const Icon(Icons.report),
             title: const Text('Laporan'),
             onTap: () => _push(context, const ReportScreen()),
