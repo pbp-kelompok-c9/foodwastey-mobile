@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:foodwastey_mobile/modules/food_waste_reporting/screens/report_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../core/theme.dart';
 import '../modules/auth/screens/login_screen.dart';
 import '../modules/auth/screens/register_screen.dart';
 import '../modules/auth/services/auth_service.dart';
+import 'package:foodwastey_mobile/modules/food_waste_reporting/screens/report_screen.dart';
+import '../modules/food_waste_management/screens/food_waste_management_screen.dart';
+
 
 /// Navigasi utama aplikasi. Setiap modul menambahkan ListTile ke bagiannya.
 class AppDrawer extends StatelessWidget {
@@ -66,6 +68,15 @@ class AppDrawer extends StatelessWidget {
             onTap: () => _push(context, const ReportScreen()),
           ),
 
+          ListTile(
+            leading: const Icon(Icons.inventory_2_outlined),
+            title: const Text('Food Waste Management'),
+            onTap: () => _push(
+              context,
+              const FoodWasteManagementScreen(),
+            ),
+          ),
+
           const Divider(),
           // ---- Modul User & Authentication
           if (auth.isLoggedIn)
@@ -86,7 +97,6 @@ class AppDrawer extends StatelessWidget {
               onTap: () => _push(context, const RegisterScreen()),
             ),
           ],
-        
         ],
       ),
     );
